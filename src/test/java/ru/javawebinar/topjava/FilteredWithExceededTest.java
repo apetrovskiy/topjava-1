@@ -16,8 +16,9 @@ import ru.javawebinar.topjava.util.UserMealsUtil;
 
 public class FilteredWithExceededTest {
 
-    private final static MethodUnderTestVersion VERSION = MethodUnderTestVersion.FOR_EACH;
+    // private final static MethodUnderTestVersion VERSION = MethodUnderTestVersion.FOR_EACH;
     // private final static MethodUnderTestVersion VERSION = MethodUnderTestVersion.STREAMS;
+    private final static MethodUnderTestVersion VERSION = MethodUnderTestVersion.ORIGINAL_STREAMS;
     private List<UserMeal> inputList;
     private List<UserMealWithExceed> filteredList;
 
@@ -69,11 +70,19 @@ public class FilteredWithExceededTest {
                 LocalTime.of(7, 0),
                 LocalTime.of(23,0),
                 2000)
-                : UserMealsUtil.getFilteredWithExceeded2(
+                : VERSION == MethodUnderTestVersion.STREAMS
+                ? UserMealsUtil.getFilteredWithExceeded2(
                 inputList,
                 LocalTime.of(7, 0),
                 LocalTime.of(23,0),
-                2000);
+                2000)
+                : VERSION == MethodUnderTestVersion.ORIGINAL_STREAMS
+                ? UserMealsUtil.getFilteredWithExceeded3(
+                inputList,
+                LocalTime.of(7, 0),
+                LocalTime.of(23,0),
+                2000)
+                : new ArrayList<>();
     }
 
     private void thenListIsEmpty() {
@@ -99,6 +108,8 @@ public class FilteredWithExceededTest {
 
     private enum MethodUnderTestVersion {
         FOR_EACH,
-        STREAMS;
+        STREAMS,
+        ORIGINAL_FOR_EACH,
+        ORIGINAL_STREAMS;
     }
 }
